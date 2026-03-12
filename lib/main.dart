@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:novox_tech_app/home_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:novox_tech_app/bloc/todo_bloc.dart';
+import 'package:novox_tech_app/homepage.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: HydratedStorageDirectory(
+      (await getApplicationDocumentsDirectory()).path,
+    ),
+  );
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,6 +22,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomePage());
+    return BlocProvider(
+      create: (_) => TodoBloc(),
+      child: MaterialApp(home: Homepage()),
+    );
   }
 }
